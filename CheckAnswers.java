@@ -2,11 +2,20 @@ package SimpleCalculate;
 
 import java.io.*;
 
-import static SimpleCalculate.StackCalculate.toPostfix;
-
 public class CheckAnswers
 {
-    public static void textFile(String path1,String path2,String path3) throws Exception
+    int numRange;
+    public CheckAnswers(int numRange)
+    {
+        this.numRange = numRange;
+    }
+    /*
+     * function:       //checkCorrectness
+     * Description:    //检查答案结果是否正确并写入grades。txt文件
+     * Calls:          //无
+     * Calls By:       //produceFile()
+     */
+    void checkCorrectness(String path1,String path2,String path3) throws Exception
     {
         FileWriter file3;
         File file1 =new File(path1);
@@ -17,14 +26,15 @@ public class CheckAnswers
         BufferedReader f2=new BufferedReader(read2);
         int correct=0,wrong=0;
         int i=1;
-        int [ ] t=new int [300];
-        int [ ] tt=new int [300];
+        int [ ] t=new int [1000];
+        int [ ] tt=new int [1000];
 
         String line;
         String line1;
+        StackCalculate a = new StackCalculate(numRange);
         while ((line = f1.readLine())!=null)
         {
-            String line2=i+":"+StackCalculate.getResult(line);
+            String line2=i+":"+a.getResult(line);
             line1=f2.readLine();
             if(line1.equals(line2))
             {
@@ -68,8 +78,13 @@ public class CheckAnswers
         read1.close();
         read2.close();
     }
-
-    static void checkRepeat (String path1,String path2,String path3) throws Exception
+    /*
+     * function:       //checkRepeat
+     * Description:    //检查题目是否有重复并写入grades。txt文件
+     * Calls:          //无
+     * Calls By:       //produceFile()
+     */
+    void checkRepeat (String path1,String path2,String path3) throws Exception
     {
         FileWriter file3;
         file3 = new FileWriter(path3, true);
@@ -92,15 +107,15 @@ public class CheckAnswers
         String [][] line4 = new String [10000][];//存放题目文件后缀表达式的各个元素
         String [] line5 = new String [10000];//存放所有题目，用于打印重复题目
         int [] ll=new int[10000];//存放重复题目的题号
-
+        StackCalculate a = new StackCalculate(numRange);
         while((line1=f1.readLine())!=null) {
-            line4[p]=toPostfix(line1).split(" ");
+            line4[p]=a.toPostfix(line1).split(" ");
             line5[p]=line1;
             p++;
         }
 
         while ((line2=f2.readLine())!=null){
-            line3[m]=toPostfix(line2).split(" ");
+            line3[m]=a.toPostfix(line2).split(" ");
             m++;
         }
 
@@ -153,12 +168,5 @@ public class CheckAnswers
         read1.close();
         read2.close();
     }
-
-
-
-
-
-
-
 
 }
