@@ -1,38 +1,49 @@
 package SimpleCalculate;
 
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class StackCalculateTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-    @Test
-    void toPostfix()
+class StackCalculateTest {
+    private StackCalculate a;
+    private StackCalculate b;
+    @BeforeEach
+    void init()
     {
-        try
-        {
-            //注意在后缀表达式最后是有一个空格字符的
-            Assertions.assertEquals("1 2 + 3 + ",StackCalculate.toPostfix("1+2+3"));
-            Assertions.assertEquals("1 2 3 + / 4 + ",StackCalculate.toPostfix("1/(2+3)+4"));
-            Assertions.assertEquals("430 50 + 222 + ",StackCalculate.toPostfix("430+50+222"));
-            Assertions.assertEquals("430 50 222 + / 7 + ",StackCalculate.toPostfix("430/(50+222)+7"));
-            Assertions.assertEquals("22 11 * 23 5 * - ",StackCalculate.toPostfix("22*11-23*5"));
-            Assertions.assertEquals("5 3 - 1 - ",StackCalculate.toPostfix("5-3-1"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        a = new StackCalculate();
+        b = new StackCalculate(100);
+    }
+    @Test
+    void toPostfix() throws Exception
+    {
+        assertEquals("20 3 - ",a.toPostfix("20-3"));
+        assertEquals("1 2 + ",a.toPostfix("1+2"));
+        assertEquals("18 2 * ",a.toPostfix("18*2"));
+        assertEquals("1 2 + 3 / ",a.toPostfix("(1+2)/3"));
+        assertEquals("1 2 3 / + ",a.toPostfix("1+2/3"));
+        assertEquals("1 2 3 4 - * + ",a.toPostfix("1+2*(3-4)"));
+        assertEquals("1 4 3 - 5 * + 8 + ",a.toPostfix("1+((4-3)*5)+8"));
     }
     @Test
     void getResult()
     {
-        try {
-            Assertions.assertEquals("",StackCalculate.toPostfix("1+2+3"));
-            Assertions.assertEquals("",StackCalculate.toPostfix("1/(2+3)+4"));
-            Assertions.assertEquals("",StackCalculate.toPostfix("430+50+222"));
-            Assertions.assertEquals("",StackCalculate.toPostfix("430/(50+222)+7"));
-            Assertions.assertEquals("",StackCalculate.toPostfix("22*11-23*5"));
-            Assertions.assertEquals("",StackCalculate.toPostfix("5-3-1"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        //与toPostfix一致
+        assertEquals("17",b.getResult("20-3"));
+        assertEquals("3",b.getResult("1+2"));
+        assertEquals("36",b.getResult("18*2"));
+        assertEquals("1",b.getResult("(1+2)/3"));
+        assertEquals("14",b.getResult("1+((4-3)*5)+8"));
+        //个别用例测试
+        assertEquals("-1",b.getResult("1/0"));//除数为0
+        assertEquals("2/3",b.getResult("2/3"));//分数测试
+        assertEquals("5/6",b.getResult("1/2+1/3"));//分数测试
+        assertEquals("-1",b.getResult("2-3"));//下界测试
+        assertEquals("0",b.getResult("3-3"));//下界测试
+        assertEquals("-1",b.getResult("100+1"));//上界测试
+        assertEquals("100",b.getResult("99+1"));//上界测试
+        assertEquals("-1",b.getResult("1+2/3"));//假分数测试
+        assertEquals("9",b.getResult("18/2"));//约分测试
     }
+
 }
