@@ -34,8 +34,8 @@ public class CalculateSystem
         writeExercises(exercises);//写入题目
         writeAnswers(exercises);//写入答案
         CheckAnswers b = new CheckAnswers(numRange);
-        b.checkCorrectness("Exercises.txt","Answers.txt","Grade.txt");
-        b.checkRepeat("Exercises.txt","Answers.txt","Grade.txt");
+        b.checkCorrectness();
+        b.checkRepeat();
     }
     /*
      * function:       //createOneExercise
@@ -142,8 +142,8 @@ public class CalculateSystem
         {
             String result = a.getResult(exercises[i]);
             Answers.write((i+1) + ":" + result+"\n");
-            Answers.close();
         }
+        Answers.close();
     }
     //产生一个范围内的整数
     String getNumber(int numRange)
