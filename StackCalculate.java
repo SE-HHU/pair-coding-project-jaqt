@@ -38,8 +38,9 @@ public class StackCalculate
         if (!str.contains("/")) //不含除号的基本运算
         {
             Stack<Integer> stack = new Stack<>();
-            for (String c : str0) {
-                if (c.equals("+") || c.equals("-") || c.equals("*"))
+            for (String c : str0)
+            {
+                if (c.equals("+") || c.equals("-") || c.equals("×"))
                 {
                     int b = stack.peek();
                     stack.pop();
@@ -64,7 +65,7 @@ public class StackCalculate
             Stack<int[]> stack = new Stack<>();
             for (String c : str0)
             {
-                if (c.equals("+") || c.equals("-") || c.equals("*") || c.equals("/"))
+                if (c.equals("+") || c.equals("-") || c.equals("×") || c.equals("/"))
                 {
                     int[] b = stack.peek();
                     stack.pop();
@@ -79,11 +80,13 @@ public class StackCalculate
                 else
                     stack.push(new int[]{Integer.parseInt(c), 1});
             }
-            //继续对结论进行考察
+            //继续对结果答案进行审查
+            if (stack.peek()[0] < 0 || stack.peek()[0] > numRange
+                    || stack.peek()[1] < 0 || stack.peek()[1] > numRange)
+                return "-1";
             if (stack.peek()[1] == 1)
                 return Integer.toString(stack.peek()[0]);
-            if (stack.peek()[0] < 0 || stack.peek()[0] > numRange || stack.peek()[0] > stack.peek()[1]
-                    || stack.peek()[1] < 0 || stack.peek()[1] > numRange)
+            if ( stack.peek()[0] > stack.peek()[1])
                 return "-1";
             return stack.peek()[0] + "/" + stack.peek()[1];
         }
@@ -98,7 +101,7 @@ public class StackCalculate
     {
         Stack<String> postfix = new Stack<>();
         StringBuilder postFix = new StringBuilder();
-        Pattern p = Pattern.compile("(?<!\\d)-?\\d+(\\.\\d+)?|[+\\-*/()]");//这个正则为匹配表达式中的数字或运算符
+        Pattern p = Pattern.compile("\\d+|[+\\-×/()]");//这个正则为匹配表达式中的数字或运算符
         Matcher m = p.matcher(str);
         while (m.find())
         {
@@ -118,7 +121,7 @@ public class StackCalculate
                 postfix.pop();
                 continue;
             }
-            if (c.equals("+") || c.equals("-") || c.equals("*") || c.equals("/"))
+            if (c.equals("+") || c.equals("-") || c.equals("×") || c.equals("/"))
             {
                 if (!postfix.empty() && getPriority(postfix.peek()) >= getPriority(c))
                 {
@@ -146,7 +149,7 @@ public class StackCalculate
     {
         if (ch.equals("+") || ch.equals("-"))
             return 1;
-        if (ch.equals("*") || ch.equals("/"))
+        if (ch.equals("×") || ch.equals("/")||ch.equals("÷"))
             return 2;
         if (ch.equals("("))
             return 0;
@@ -160,7 +163,7 @@ public class StackCalculate
             return a + b;
         if (ch.equals("-"))
             return a - b;
-        if (ch.equals("*"))
+        if (ch.equals("×"))
             return a * b;
         return 0;
     }
@@ -174,9 +177,9 @@ public class StackCalculate
             return a.add(b).getNumber();
         if (ch.equals("-"))
             return a.sub(b).getNumber();
-        if (ch.equals("*"))
+        if (ch.equals("×"))
             return a.multiply(b).getNumber();
-        if (ch.equals("/"))
+        if (ch.equals("/")||ch.equals("÷"))
             return a.divide(b).getNumber();
         return new int[]{0, 0};
     }

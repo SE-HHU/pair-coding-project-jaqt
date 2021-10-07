@@ -9,10 +9,14 @@ public class CalculateSystem
 {
     int exesNumber;
     int numRange;
-    public CalculateSystem(int exesNumber,int numRange)
+    public CalculateSystem(int exesNumber,int numRange)//构造方法
     {
-        this.exesNumber =exesNumber;
+        this.exesNumber = exesNumber;
         this.numRange = numRange;
+    }
+    public CalculateSystem()//构造方法
+    {
+
     }
     /*
      * function:       //produceFiles
@@ -46,13 +50,13 @@ public class CalculateSystem
     String createOneExercise(int numRange)
     {
         //生成一道不带括号的题目;
-        LinkedList<String> list = new LinkedList<>();
+        LinkedList<Object> list = new LinkedList<>();
         int signNumber = getSignNumber();
-        list.add(getNumber(numRange));
+        list.add(new TypeNumber().getTNumber(numRange));
         for(int i =0;i<signNumber;i++)
         {
             list.add(getSign());
-            list.add(getNumber(numRange));
+            list.add(new TypeNumber().getTNumber(numRange));
         }
         //在不带括号的基础上加入括号；
         if (signNumber >= 2&&hasBrackets())
@@ -105,11 +109,18 @@ public class CalculateSystem
 
         }
         //将链表中元素遍历，形成字符串
-        ListIterator<String> it = list.listIterator();
+        ListIterator<Object> it = list.listIterator();
         StringBuilder in = new StringBuilder();
         while (it.hasNext())
         {
-            in.append(it.next());
+            Object next = it.next();
+            if (next instanceof String)
+                in.append(next);
+            else
+            {
+                TypeNumber t = (TypeNumber) next;
+                in.append(t.getTNumber(numRange));
+            }
         }
         return in.toString();
     }
@@ -161,8 +172,8 @@ public class CalculateSystem
         return switch ((int) (Math.random() * 4) + 1) {
             case 1 -> "+";
             case 2 -> "-";
-            case 3 -> "*";
-            case 4 -> "/";
+            case 3 -> "×";
+            case 4 -> "÷";
             default -> "";
         };
     }
@@ -172,4 +183,25 @@ public class CalculateSystem
         return !new Random().nextBoolean();
     }
 
+}
+//随机生成整数或分数
+class TypeNumber
+{
+    boolean numberType;
+    public TypeNumber()
+    {
+        this.numberType = new Random().nextBoolean();
+    }
+    public String getTNumber(int numRange)
+    {
+        CalculateSystem a = new CalculateSystem();
+        if (numberType)
+        {
+            return a.getNumber(numRange);
+        }
+        else
+        {
+            return a.getNumber(numRange)+"/"+a.getNumber(numRange);
+        }
+    }
 }
